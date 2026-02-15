@@ -1,11 +1,10 @@
 import Image from "next/image";
-
-export default function TitleWrapper() {
-  const title = "ISIS Keynes";
-  const imageUrl = "";
+import logo from "@/public/logo.png";
+export default function TitleWrapper({ title }: { title: string }) {
   return (
-    <div className="container mx-auto text-center w-auto md:w-xl lg:w-4xl">
-      <Image src={imageUrl || ""} alt={""} />
+    <div className="text-center pt-10 grid grid-col gap-5 md:gap-10 lg:gap-15">
+      <Image src={logo} alt={""} width={100} height={100} className="mx-auto" />
+      <h2 className="text-1xl md:text-3xl lg:text-4xl">ISIS Keynes</h2>
       <h1 className="text-3xl md:text-5xl lg:text-6xl">{title}</h1>
     </div>
   );
