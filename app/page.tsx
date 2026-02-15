@@ -1,29 +1,11 @@
 import FormWrapper from "@/components/modules/FormWrapper/page";
-import Image from "next/image";
+import TitleWrapper from "@/components/modules/TitleWrapper/page";
 
 export default function Home() {
   return (
-    <div>
-      <TitleWrapper title={"a"} subtitle={"b"} />
+    <div className="p-10 md:p-20 lg:p-30">
+      <TitleWrapper />
       <FormWrapper />
     </div>
   );
 }
-
-const TitleWrapper = ({
-  title,
-  subtitle,
-  imageUrl,
-}: {
-  title: string;
-  subtitle: string;
-  imageUrl?: string;
-}) => {
-  return (
-    <div className="container">
-      <h1>{title}</h1>
-      <h2>{subtitle}</h2>
-      <Image src={imageUrl || ""} alt={""} />
-    </div>
-  );
-};

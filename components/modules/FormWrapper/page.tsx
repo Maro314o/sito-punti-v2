@@ -46,7 +46,7 @@ const LoginContent = ({
         <ArrowLeftIcon />
       </Button>
 
-      <div className="mx-auto w-auto md:w-md">
+      <div className="grid grid-col gap-2 mx-auto w-auto md:w-md">
         <Input type="text" placeholder="mail" />
         <Input type="password" placeholder="password" />
       </div>
@@ -90,9 +90,12 @@ const LoggedContent = ({
 const RegisterContent = ({ onLogin }: { onLogin: () => void }) => {
   return (
     <div className="grid grid-col gap-5">
-      <div className="mx-auto w-auto md:w-md">
+      <div className="grid grid-col gap-2 mx-auto w-auto md:w-md">
         <Input type="text" placeholder="mail" />
+        <Input type="text" placeholder="cognome" />
+        <Input type="text" placeholder="nome" />
         <Input type="password" placeholder="password" />
+        <Input type="password" placeholder="conferma password" />
       </div>
       <div>
         <Button variant={"outline"}>Registrati</Button>
@@ -110,11 +113,11 @@ const RegisterContent = ({ onLogin }: { onLogin: () => void }) => {
 const ForgotContent = ({ onBack }: { onBack: () => void }) => {
   return (
     <div className="grid grid-col gap-5">
-      <h3>Verrà mandata una mail per il cambio password</h3>
       <Button variant={"link"} size={"icon"} onClick={onBack}>
         <ArrowLeftIcon />
       </Button>
 
+      <h3>Verrà mandata una mail per il cambio password</h3>
       <div className="mx-auto w-auto md:w-md">
         <Input type="text" placeholder="mail" />
       </div>
