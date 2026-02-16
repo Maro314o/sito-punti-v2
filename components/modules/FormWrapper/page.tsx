@@ -5,15 +5,22 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function FormWrapper() {
+export default function FormWrapper({
+  p,
+}: {
+  p?: "home" | "login" | "register" | "forgot" | "logged";
+}) {
   const [page, setPage] = useState<
     "home" | "login" | "register" | "forgot" | "logged"
-  >("home");
+  >(p || "home");
+  const nome = "Marco";
+  const cognome = "Rossi";
+  const classe = "2BE";
 
   return (
     <div className="container mx-auto text-center w-auto md:w-xl lg:w-4xl p-10 md:p-15 lg:p-25">
       {page === "logged" ? (
-        <LoggedContent nome={""} cognome={""} classe={""} />
+        <LoggedContent nome={nome} cognome={cognome} classe={classe} />
       ) : page === "login" ? (
         <LoginContent
           onBack={() => setPage("home")}
@@ -78,11 +85,11 @@ const LoggedContent = ({
   classe: string;
 }) => {
   return (
-    <div className="grid grid-col gap-5">
-      <h2>
-        {"nome"} {"cognome"}
+    <div className="grid grid-col">
+      <h2 className="text-3xl">
+        {nome} {cognome}
       </h2>
-      <h3>{"classe"}</h3>
+      <h3 className="text-2xl">{classe}</h3>
     </div>
   );
 };

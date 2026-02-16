@@ -55,7 +55,7 @@ const MobileContent = () => {
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-          <Link href="/">Profilo</Link>
+          <Link href="/profilo">Profilo</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
@@ -83,7 +83,7 @@ const DesktopContent = () => {
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-          <Link href="/">Profilo</Link>
+          <Link href="/profilo">Profilo</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
