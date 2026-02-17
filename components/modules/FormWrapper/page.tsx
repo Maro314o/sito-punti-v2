@@ -4,21 +4,35 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { login as apiLogin, logout as apiLogout } from "@/lib/api";
 
 export default function FormWrapper() {
-  const [page, setPage] = useState<
-    "home" | "login" | "register" | "forgot" | "logged"
-  >("home");
+  const { user, refreshUser } = useAuth();
+  const [page, setPage] = useState<"home" | "login" | "register" | "forgot" | "logged">(
+    user ? "logged" : "home"
+  );
 
   return (
     <div className="container mx-auto text-center w-auto md:w-xl lg:w-4xl p-10 md:p-15 lg:p-25">
       {page === "logged" ? (
-        <LoggedContent nome={""} cognome={""} classe={""} />
+        <LoggedContent 
+          nome={user?.nominativo || ""} 
+          onLogout={async () => {
+            await apiLogout();
+            await refreshUser();
+            setPage("home");
+          }} 
+        />
       ) : page === "login" ? (
         <LoginContent
           onBack={() => setPage("home")}
           onRegister={() => setPage("register")}
           onForgotPassword={() => setPage("forgot")}
+          onLoginSuccess={async () => {
+            await refreshUser();
+            setPage("logged");
+          }}
         />
       ) : page === "register" ? (
         <RegisterContent onLogin={() => setPage("login")} />
@@ -35,54 +49,99 @@ const LoginContent = ({
   onBack,
   onRegister,
   onForgotPassword,
+  onLoginSuccess,
 }: {
   onBack: () => void;
   onRegister: () => void;
   onForgotPassword: () => void;
+  onLoginSuccess: () => void;
 }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await apiLogin(email, password);
+      if (result.success) {
+        onLoginSuccess();
+      } else {
+        setError(result.error || "Login fallito");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login fallito");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="grid grid-col gap-5">
-      <Button variant={"link"} size={"icon"} onClick={onBack}>
+    <form onSubmit={handleLogin} className="grid grid-col gap-5">
+      <Button type="button" variant={"link"} size={"icon"} onClick={onBack}>
         <ArrowLeftIcon />
       </Button>
 
       <div className="grid grid-col gap-2 mx-auto w-auto md:w-md">
-        <Input type="text" placeholder="mail" />
-        <Input type="password" placeholder="password" />
+        <Input 
+          type="email" 
+          placeholder="email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Input 
+          type="password" 
+          placeholder="password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
       </div>
 
-      <Button variant={"link"} onClick={onForgotPassword}>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
+      <Button type="button" variant={"link"} onClick={onForgotPassword}>
         Hai dimenticato la password?
       </Button>
 
       <div>
-        <Button variant={"outline"}>Accedi</Button>
+        <Button type="submit" variant={"outline"} disabled={loading}>
+          {loading ? "Accesso in corso..." : "Accedi"}
+        </Button>
       </div>
 
-      <Button variant={"link"} onClick={onRegister}>
+      <Button type="button" variant={"link"} onClick={onRegister}>
         Non hai un account?
         <br />
         Registrati
       </Button>
-    </div>
+    </form>
   );
 };
 
 const LoggedContent = ({
   nome,
-  cognome,
-  classe,
+  onLogout,
 }: {
   nome: string;
-  cognome: string;
-  classe: string;
+  onLogout: () => void;
 }) => {
   return (
     <div className="grid grid-col gap-5">
       <h2>
-        {"nome"} {"cognome"}
+        Benvenuto, {nome}!
       </h2>
-      <h3>{"classe"}</h3>
+      
+      <div>
+        <Button variant={"outline"} onClick={onLogout}>
+          Logout
+        </Button>
+      </div>
     </div>
   );
 };
@@ -113,7 +172,7 @@ const RegisterContent = ({ onLogin }: { onLogin: () => void }) => {
 const ForgotContent = ({ onBack }: { onBack: () => void }) => {
   return (
     <div className="grid grid-col gap-5">
-      <Button variant={"link"} size={"icon"} onClick={onBack}>
+      <Button type="button" variant={"link"} size={"icon"} onClick={onBack}>
         <ArrowLeftIcon />
       </Button>
 
