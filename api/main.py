@@ -4,13 +4,12 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 from api.models import Utente, Classe, Squadra, Cronologia
-from api.auth import auth_bp
+from api.auth import auth
+from .database import db
 
-from flask_sqlalchemy import SQLAlchemy
-from .constants import DOTENV_FILE
+from .constants import DOTENV_FILE,DATABASE_FILE,DATA_DIRECTORY
 
 load_dotenv(DOTENV_FILE)
-db = SQLAlchemy()
 
 
 def create_app():
@@ -19,27 +18,25 @@ def create_app():
         "SECRET_KEY", "dev-secret-key-change-in-production"
     )
 
-    db_path = os.environ.get(
-        "DB_PATH", os.path.join(os.path.dirname(__file__), "..", "data")
-    )
-    os.makedirs(db_path, exist_ok=True)
-    db_file = os.path.join(db_path, "database.db")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_file}"
+    os.makedirs(DATA_DIRECTORY, exist_ok=True)
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DATABASE_FILE}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
     db.init_app(app)
 
-    cors_origins = os.environ.get(
+
+    #
+    cors_origins = os.getenv(
         "CORS_ORIGINS",
         "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001",
-    )
+    ) # cross origin,not needed if public api
     CORS(
         app,
         supports_credentials=True,
         origins=cors_origins.split(","),
     )
+    #
 
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth)
 
     with app.app_context():
         db.create_all()

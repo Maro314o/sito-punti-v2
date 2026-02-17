@@ -2,13 +2,13 @@ from api.database import db
 from sqlalchemy import func
 
 
-class Squadra(db.Model):
+class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome_squadra = db.Column(db.String(150), unique=True)
-    numero_componenti = db.Column(db.Integer)
+    name = db.Column(db.String(150), unique=True)
+    number_of_components= db.Column(db.Integer)
 
     studenti_componenti = db.relationship(
-        "Utente", lazy="dynamic", backref="squadra_utente"
+        "Utente", lazy="dynamic", backref="team"
     )
 
     classe_id = db.Column(db.Integer, db.ForeignKey("classe.id"))
