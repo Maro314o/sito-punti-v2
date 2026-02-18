@@ -63,7 +63,7 @@ const MobileContent = () => {
         <NavigationMenuContent>
           <ul className="w-66">
             <ListItem href="/" title="Caccia al tesoro"></ListItem>
-            <ListItem href="/" title="Rotte"></ListItem>
+            <ListItem href="/rotte" title="Rotte"></ListItem>
             <ListItem href="/" title="Misteri"></ListItem>
             <ListItem href="/" title="Regole"></ListItem>
           </ul>
@@ -93,7 +93,7 @@ const DesktopContent = () => {
       </NavigationMenuItem>
       <NavigationMenuItem>
         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-          <Link href="/">Rotte</Link>
+          <Link href="/rotte">Rotte</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
       <NavigationMenuItem>
