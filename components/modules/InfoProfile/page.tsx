@@ -1,7 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Bounty from "../Bounty/page";
 import jollyroger from "@/public/class_images/4CI-JOLLY ROGER/THE DIDDLERS.jpg";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function InfoProfile() {
   const fruttiPos = 3;
@@ -15,8 +24,8 @@ export default function InfoProfile() {
     <div>
       <GeneralitiesWrapper anno={anno} rotta={rotta} nomeRotta={nomeRotta} />
       <div className="container mx-auto grid md:grid-cols-2 md:gap-20 md:p-20 lg:p-30">
-        <div className="mx-auto md:order-last">
-          <div className="grid gap-2">
+        <div className="mx-auto md:order-last flex flex-col justify-center h-full">
+          <div className="grid gap-20">
             <Specs ruolo={ruolo} abilità={abilità} />
             <GeneralAbilitiesWrapper />
           </div>
@@ -59,20 +68,24 @@ const Friuts = ({
   fruttiNegativi: number;
 }) => {
   return (
-    <div>
-      {/* <Image src={""} alt={""} /> !!AGGIUNGERE IMMAGINE FRUTTA*/}
-      <table className="text-center">
-        <tbody>
-          <tr>
-            <td className="p-2 border shadow-xs bg-green-400/50 min-w-10">
-              +{fruttiPositivi}
-            </td>
-            <td className="p-2 border shadow-xs bg-red-400/50 min-w-10">
-              -{fruttiNegativi}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="flex flex-col w-48 mx-auto my-5 border-2 border-dashed border-amber-700 bg-amber-50/80 p-3">
+      <div className="text-center text-amber-900 text-xs uppercase tracking-widest border-b border-amber-700 pb-1 mb-2">
+        Frutti del Mare
+      </div>
+      <div className="flex flex-row gap-2">
+        <div className="flex-1 flex flex-col items-center gap-1">
+          <span className="text-2xl">🍎</span>
+          <div className="w-full text-center bg-green-700 text-white font-bold text-lg py-1 border-t-4 border-green-900">
+            +{fruttiPositivi}
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col items-center gap-1">
+          <span className="text-2xl">💀</span>
+          <div className="w-full text-center bg-red-800 text-white font-bold text-lg py-1 border-t-4 border-red-950">
+            -{fruttiNegativi}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -87,39 +100,97 @@ const Specs = ({
   isUsed?: boolean;
 }) => {
   return (
-    <div className="text-center grid gap-2">
-      <div className="p-2 border bg-background shadow-xs rounded-md">
-        <h3 className="text-2xl">{ruolo}</h3>
+    <div className="text-center grid gap-5">
+      <div className="border bg-background shadow-xs p-5">
+        <h3 className="text-5xl text-bold">{ruolo}</h3>
       </div>
       <div
         className={cn(
-          "p-2 border bg-background shadow-xs rounded-md text-xl",
+          "p-2 border bg-background shadow-xs text-xl",
           isUsed ? "bg-gray-200/50 text-gray-400" : "",
         )}
       >
-        <p>{abilità}</p>
+        <p className="text-3xl">{abilità}</p>
       </div>
     </div>
   );
 };
+
+const armiData = {
+  poseidon: {
+    nome: "POSEIDON",
+    descrizione:
+      "Permette a chi la utilizza di scegliere eliminare una domanda durante l'interrogazione e sceglierne un'altra al suo posto, tra un elenco di domande disponibili.\n\nPotere presente per ogni pirata.\n\nUtilizzabile una volta in ogni periodo. Nel caso in cui venga scoperto il mistero da parte del pirata o di un membro della sua ciurma, il pirata può decidere di renderlo di nuovo disponibile.",
+  },
+  pluto: {
+    nome: "PLUTON",
+    descrizione:
+      "Permette a chi la utilizza di raddoppiare i punti di taglia ottenuti con un voto (Verifica, Interrogazione, Progetto). Per essere utilizzata va dichiarato il suo utilizzo prima della prova scelta.\n\nPotere presente per ogni pirata.\n\nUtilizzabile una volta in ogni periodo. Nel caso in cui venga scoperto il mistero da parte del pirata o di un membro della sua ciurma, il pirata può decidere di renderlo di nuovo disponibile.",
+  },
+  uranus: {
+    nome: "URANUS",
+    descrizione:
+      "Permette a chi la utilizza di rinviare l'interrogazione alla prossima data in cui ci saranno interrogazioni. Per essere utilizzata va dichiarato il suo utilizzo in un'ora di interrogazione, prima di sapere i nomi dei pirati interrogati.\n\nPotere presente per ogni pirata.\n\nUtilizzabile una volta in ogni periodo. Nel caso in cui venga scoperto il mistero da parte del pirata o di un membro della sua ciurma, il pirata può decidere di renderlo di nuovo disponibile.",
+  },
+};
+
+type ArmaKey = keyof typeof armiData;
 
 const GeneralAbilitiesWrapper = ({}) => {
+  const armiUsate: ArmaKey[] = [];
+
   return (
-    <div className="flex flex-row gap-2 mx-auto">
-      <GeneralAbility nome={"poseidon"} />
-      <GeneralAbility nome={"pluto"} />
-      <GeneralAbility nome={"uranus"} />
+    <div className="flex flex-row gap-5 mx-auto">
+      <GeneralAbility name="poseidon" isUsed={armiUsate.includes("poseidon")} />
+      <GeneralAbility name="pluto" isUsed={armiUsate.includes("pluto")} />
+      <GeneralAbility name="uranus" isUsed={armiUsate.includes("uranus")} />
     </div>
   );
 };
 
-const GeneralAbility = ({ nome }: { nome: string }) => {
+const GeneralAbility = ({
+  name,
+  isUsed,
+}: {
+  name: ArmaKey;
+  isUsed: boolean;
+}) => {
+  const arma = armiData[name];
+
   return (
-    <div className="min-w-25 text-center">
-      <div className="w-10 mx-auto border shadow-xs bg-background rounded-full">
-        <Image src={jollyroger} alt={""} />
-      </div>
-      <h4>{nome}</h4>
-    </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <div className="min-w-25 text-center cursor-pointer hover:opacity-80 transition-opacity">
+          <div className="w-30 mx-auto border-2 overflow-hidden border-gray-600 shadow-xs bg-background rounded-full">
+            <Image src={jollyroger} alt={name} className="object-cover w-full h-full" />
+          </div>
+          <h4 className="capitalize">{name}</h4>
+        </div>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>{arma.nome}</DialogTitle>
+        </DialogHeader>
+        <div
+          className={cn(
+            "grid gap-4 p-4 rounded-lg border",
+            isUsed ? "bg-gray-200/50" : "bg-background"
+          )}
+        >
+          <div className="flex flex-col md:flex-row gap-4 items-start">
+            <div className="w-24 h-24 flex-shrink-0 mx-auto md:mx-0">
+              <Image
+                src={jollyroger}
+                alt={arma.nome}
+                className="w-full h-full object-cover rounded-full border"
+              />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm whitespace-pre-line">{arma.descrizione}</p>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
