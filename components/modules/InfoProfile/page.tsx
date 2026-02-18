@@ -24,8 +24,8 @@ export default function InfoProfile() {
     <div>
       <GeneralitiesWrapper anno={anno} rotta={rotta} nomeRotta={nomeRotta} />
       <div className="container mx-auto grid md:grid-cols-2 md:gap-20 md:p-20 lg:p-30">
-        <div className="mx-auto md:order-last">
-          <div className="grid gap-2">
+        <div className="mx-auto md:order-last flex flex-col justify-center h-full">
+          <div className="grid gap-20">
             <Specs ruolo={ruolo} abilità={abilità} />
             <GeneralAbilitiesWrapper />
           </div>
@@ -68,20 +68,24 @@ const Friuts = ({
   fruttiNegativi: number;
 }) => {
   return (
-    <div>
-      {/* <Image src={""} alt={""} /> !!AGGIUNGERE IMMAGINE FRUTTA*/}
-      <table className="text-center">
-        <tbody>
-          <tr>
-            <td className="p-2 border shadow-xs bg-green-400/50 min-w-10">
-              +{fruttiPositivi}
-            </td>
-            <td className="p-2 border shadow-xs bg-red-400/50 min-w-10">
-              -{fruttiNegativi}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="flex flex-col w-48 mx-auto my-5 border-2 border-dashed border-amber-700 bg-amber-50/80 p-3">
+      <div className="text-center text-amber-900 text-xs uppercase tracking-widest border-b border-amber-700 pb-1 mb-2">
+        Frutti del Mare
+      </div>
+      <div className="flex flex-row gap-2">
+        <div className="flex-1 flex flex-col items-center gap-1">
+          <span className="text-2xl">🍎</span>
+          <div className="w-full text-center bg-green-700 text-white font-bold text-lg py-1 border-t-4 border-green-900">
+            +{fruttiPositivi}
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col items-center gap-1">
+          <span className="text-2xl">💀</span>
+          <div className="w-full text-center bg-red-800 text-white font-bold text-lg py-1 border-t-4 border-red-950">
+            -{fruttiNegativi}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -96,17 +100,17 @@ const Specs = ({
   isUsed?: boolean;
 }) => {
   return (
-    <div className="text-center grid gap-2">
-      <div className="p-2 border bg-background shadow-xs rounded-md">
-        <h3 className="text-2xl">{ruolo}</h3>
+    <div className="text-center grid gap-5">
+      <div className="border bg-background shadow-xs p-5">
+        <h3 className="text-5xl text-bold">{ruolo}</h3>
       </div>
       <div
         className={cn(
-          "p-2 border bg-background shadow-xs rounded-md text-xl",
+          "p-2 border bg-background shadow-xs text-xl",
           isUsed ? "bg-gray-200/50 text-gray-400" : "",
         )}
       >
-        <p>{abilità}</p>
+        <p className="text-3xl">{abilità}</p>
       </div>
     </div>
   );
@@ -136,31 +140,31 @@ const GeneralAbilitiesWrapper = ({}) => {
   const armiUsate: ArmaKey[] = [];
 
   return (
-    <div className="flex flex-row gap-2 mx-auto">
-      <GeneralAbility nome="poseidon" usata={armiUsate.includes("poseidon")} />
-      <GeneralAbility nome="pluto" usata={armiUsate.includes("pluto")} />
-      <GeneralAbility nome="uranus" usata={armiUsate.includes("uranus")} />
+    <div className="flex flex-row gap-5 mx-auto">
+      <GeneralAbility name="poseidon" isUsed={armiUsate.includes("poseidon")} />
+      <GeneralAbility name="pluto" isUsed={armiUsate.includes("pluto")} />
+      <GeneralAbility name="uranus" isUsed={armiUsate.includes("uranus")} />
     </div>
   );
 };
 
 const GeneralAbility = ({
-  nome,
-  usata,
+  name,
+  isUsed,
 }: {
-  nome: ArmaKey;
-  usata: boolean;
+  name: ArmaKey;
+  isUsed: boolean;
 }) => {
-  const arma = armiData[nome];
+  const arma = armiData[name];
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <div className="min-w-25 text-center cursor-pointer hover:opacity-80 transition-opacity">
-          <div className="w-10 mx-auto border shadow-xs bg-background rounded-full">
-            <Image src={jollyroger} alt={nome} />
+          <div className="w-30 mx-auto border-2 overflow-hidden border-gray-600 shadow-xs bg-background rounded-full">
+            <Image src={jollyroger} alt={name} className="object-cover w-full h-full" />
           </div>
-          <h4 className="capitalize">{nome}</h4>
+          <h4 className="capitalize">{name}</h4>
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl">
@@ -170,7 +174,7 @@ const GeneralAbility = ({
         <div
           className={cn(
             "grid gap-4 p-4 rounded-lg border",
-            usata ? "bg-gray-200/50" : "bg-background"
+            isUsed ? "bg-gray-200/50" : "bg-background"
           )}
         >
           <div className="flex flex-col md:flex-row gap-4 items-start">
