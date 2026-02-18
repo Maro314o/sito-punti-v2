@@ -2,6 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ArrowLeftIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -82,6 +89,91 @@ const LoginContent = ({
   );
 };
 
+const PasswordChangeDialog = () => {
+  const [vecchiaPassword, setVecchiaPassword] = useState("");
+  const [nuovaPassword, setNuovaPassword] = useState("");
+  const [confermaPassword, setConfermaPassword] = useState("");
+  const [errore, setErrore] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const handleConferma = () => {
+    setErrore("");
+
+    if (!vecchiaPassword) {
+      setErrore("Inserisci la vecchia password");
+      return;
+    }
+
+    if (!nuovaPassword) {
+      setErrore("Inserisci la nuova password");
+      return;
+    }
+
+    if (!confermaPassword) {
+      setErrore("Conferma la nuova password");
+      return;
+    }
+
+    if (nuovaPassword !== confermaPassword) {
+      setErrore("Password non corrispondenti");
+      return;
+    }
+
+    // Qui andrebbe la logica per cambiare la password
+    console.log("Password cambiata con successo");
+    setOpen(false);
+    setVecchiaPassword("");
+    setNuovaPassword("");
+    setConfermaPassword("");
+    setErrore("");
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="mt-2 w-fit mx-auto">
+          Recupera password
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Cambio password</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Input
+              type="password"
+              placeholder="Vecchia password"
+              value={vecchiaPassword}
+              onChange={(e) => setVecchiaPassword(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Input
+              type="password"
+              placeholder="Nuova password"
+              value={nuovaPassword}
+              onChange={(e) => setNuovaPassword(e.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Input
+              type="password"
+              placeholder="Conferma password"
+              value={confermaPassword}
+              onChange={(e) => setConfermaPassword(e.target.value)}
+            />
+            {errore && (
+              <p className="text-sm text-red-500">{errore}</p>
+            )}
+          </div>
+          <Button onClick={handleConferma}>Conferma</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const LoggedContent = ({
   nome,
   cognome,
@@ -97,6 +189,10 @@ const LoggedContent = ({
         {nome} {cognome}
       </h2>
       <h3 className="text-2xl">{classe}</h3>
+      <PasswordChangeDialog />
+      <p className="text-sm text-muted-foreground">
+        Ultimo cambio password: 15/01/2026
+      </p>
     </>
   );
 };
