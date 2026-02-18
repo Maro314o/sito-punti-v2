@@ -15,9 +15,6 @@ TOKEN_EXPIRY_DAYS = 7
 def create_token(user_id, email, nominativo, admin_user):
     payload = {
         "user_id": user_id,
-        "email": email,
-        "nominativo": nominativo,
-        "admin": admin_user == 1,
         "exp": datetime.utcnow() + timedelta(days=TOKEN_EXPIRY_DAYS),
         "iat": datetime.utcnow(),
     }

@@ -1,6 +1,4 @@
-from api.models.utente import Utente
-from api.models.classe import Classe
-from api.models.squadra import Squadra
-from api.models.cronologia import Cronologia
+from api.models.user import User
+from api.models.class import Class
+from api.models.team import Team
 
-__all__ = ["Utente", "Classe", "Squadra", "Cronologia"]

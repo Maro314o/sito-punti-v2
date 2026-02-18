@@ -2,7 +2,6 @@ from flask_login import UserMixin
 from sqlalchemy import func
 import datetime
 from api.database import db
-from typing import List, Optional
 
 
 class User(db.Model, UserMixin):
@@ -13,19 +12,23 @@ class User(db.Model, UserMixin):
         id (int): Primary key
         email (str): User's email (unique)
         full_name (str): User's full name (unique)
-        team (str): Team name the user belongs to
+        team_name (str): Team name the user belongs to
         password (str): User's password (hashed)
         admin_user (int): 1 if admin, 0 otherwise
         active_account (int): 1 if account is active, 0 otherwise
         last_password_change (datetime): Timestamp of last password change
-        class_id (int): Foreign key to class
-        team_id (int): Foreign key to team
+        school_class_id (int): Foreign key to school_class table
+        team_id (int): Foreign key to team table
+
+    Relationships:
+        team (relationship): Many-to-one relationship with Team model
+        school_class (relationship): Many-to-one relationship with SchoolClass model
     """
 
     id: int = db.Column(db.Integer, primary_key=True)
     email: str = db.Column(db.String(150), unique=True)
     full_name: str = db.Column(db.String(150), unique=True)
-    team: str = db.Column(db.String(150), nullable=False)
+    team_name: str = db.Column(db.String(150), nullable=False)
     password: str = db.Column(db.String(150), nullable=False)
     admin_user: int = db.Column(db.Integer, default=0)
     active_account: int = db.Column(db.Integer, default=0)
@@ -33,12 +36,9 @@ class User(db.Model, UserMixin):
         db.DateTime, default=datetime.datetime.now
     )
 
-    class_id: int = db.Column(db.Integer, db.ForeignKey("class.id"))
+    school_class_id: int = db.Column(db.Integer, db.ForeignKey("school_class.id"))
     team_id: int = db.Column(db.Integer, db.ForeignKey("team.id"))
-
-    cronologia_studente = db.relationship(
-        "Cronologia", lazy="dynamic", backref="studente"
-    )
+    events= db.relationship("Event", lazy="dynamic", backref="user")
 
     def is_admin(self) -> bool:
         """
@@ -107,32 +107,32 @@ class User(db.Model, UserMixin):
         return cls.query.filter_by(email=email).one()
 
     @classmethod
-    def get_all_students(cls) -> List["User"]:
+    def get_all_students(cls) -> list["User"]:
         """
         Retrieve all users who are students (non-admin users).
 
         Returns:
-            List[User]: List of all student users.
+            list[User]: List of all student users.
         """
         return cls.query.filter_by(admin_user=0).all()
 
     @classmethod
-    def get_all_admins(cls) -> List["User"]:
+    def get_all_admins(cls) -> list["User"]:
         """
         Retrieve all users who are administrators.
 
         Returns:
-            List[User]: List of all admin users.
+            list[User]: List of all admin users.
         """
         return cls.query.filter_by(admin_user=1).all()
 
     @classmethod
-    def get_active_students(cls) -> List["User"]:
+    def get_active_students(cls) -> list["User"]:
         """
         Retrieve all students with active accounts.
 
         Returns:
-            List[User]: List of all active student users.
+            list[User]: List of all active student users.
         """
         return cls.query.filter_by(admin_user=0, active_account=1).all()
 
@@ -145,19 +145,19 @@ class User(db.Model, UserMixin):
                 - id (int): User's ID
                 - email (str): User's email
                 - full_name (str): User's full name
-                - team (str): Team name
+                - team_name (str): Team name
                 - admin_user (int): Admin flag
                 - active_account (int): Active account flag
-                - class_id (int): Class ID
+                - school_class_id (int): Class ID
                 - team_id (int): Team ID
         """
         return {
             "id": self.id,
             "email": self.email,
             "full_name": self.full_name,
-            "team": self.team,
+            "team_name": self.team_name,
             "admin_user": self.admin_user,
             "active_account": self.active_account,
-            "classe_id": self.class_id,
-            "squadra_id": self.team_id,
+            "school_class_id": self.school_class_id,
+            "team_id": self.team_id,
         }

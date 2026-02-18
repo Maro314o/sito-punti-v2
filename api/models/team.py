@@ -1,62 +1,92 @@
 from api.database import db
-from sqlalchemy import func
 
 
 class Team(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), unique=True)
-    number_of_components= db.Column(db.Integer)
+    """
+    Team model representing a team in the system.
 
-    studenti_componenti = db.relationship(
-        "Utente", lazy="dynamic", backref="team"
-    )
+    Attributes:
+        id (int): Primary key
+        name (str): Name of the team (unique)
+        size (int): Number of members in the team
+        school_class_id (int): Foreign key to the school_class table
 
-    classe_id = db.Column(db.Integer, db.ForeignKey("classe.id"))
+    Relationships:
+        members (relationship): One-to-many relationship with User model
+        school_class (relationship): Many-to-one relationship with SchoolClass model
+    """
+
+    id: int = db.Column(db.Integer, primary_key=True)
+    name: str = db.Column(db.String(150), unique=True)
+    size: int = db.Column(db.Integer)
+
+    school_class_id: int = db.Column(db.Integer, db.ForeignKey("school_class.id"))
+
+    members = db.relationship("User", lazy="dynamic", backref="team")
 
     @classmethod
-    def get_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
+    def get_by_id(cls, team_id: int) -> "Team | None":
+        """
+        Retrieve a team by its ID.
+
+        Args:
+            team_id (int): The unique identifier of the team.
+
+        Returns:
+            Team | None: The team object if found, None otherwise.
+        """
+        return cls.query.filter_by(id=team_id).first()
 
     @classmethod
-    def get_by_nome(cls, nome_squadra):
-        return cls.query.filter_by(nome_squadra=nome_squadra).first()
+    def get_by_name(cls, team_name: str) -> "Team | None":
+        """
+        Retrieve a team by its name.
+
+        Args:
+            team_name (str): The name of the team.
+
+        Returns:
+            Team | None: The team object if found, None otherwise.
+        """
+        return cls.query.filter_by(name=team_name).first()
 
     @classmethod
-    def get_all(cls):
+    def get_all(cls) -> list["Team"]:
+        """
+        Retrieve all teams.
+
+        Returns:
+            list[Team]: List of all teams.
+        """
         return cls.query.all()
 
     @classmethod
-    def get_by_classe(cls, classe_id):
-        return cls.query.filter_by(classe_id=classe_id).all()
+    def get_by_class(cls, school_class_id: int) -> list["Team"]:
+        """
+        Retrieve all teams belonging to a specific class.
 
-    def punti_stagione(self, stagione):
-        from api.models.cronologia import Cronologia
-        from api.models.classe import Classe
+        Args:
+            school_class_id (int): The ID of the school class.
 
-        id_utenti_squadra = [studente.id for studente in self.studenti_componenti.all()]
+        Returns:
+            list[Team]: List of teams in the specified class.
+        """
+        return cls.query.filter_by(school_class_id=school_class_id).all()
 
-        if not id_utenti_squadra:
-            return 0
+    def to_dict(self) -> dict:
+        """
+        Convert the team object to a dictionary representation.
 
-        punti_squadra = db.session.scalar(
-            db.select(func.coalesce(func.sum(Cronologia.modifica_punti), 0)).where(
-                Cronologia.utente_id.in_(id_utenti_squadra),
-                Cronologia.stagione == stagione,
-            )
-        )
-
-        classe = Classe.get_by_id(self.classe_id)
-        if not classe or not classe.massimo_studenti_squadra:
-            return punti_squadra
-
-        return punti_squadra * (
-            classe.massimo_studenti_squadra / len(id_utenti_squadra)
-        )
-
-    def to_dict(self):
+        Returns:
+            dict: Dictionary containing team data with keys:
+                - id (int): Team ID
+                - name (str): Team name
+                - size (int): Number of team members
+                - school_class_id (int): Class ID the team belongs to
+        """
         return {
             "id": self.id,
-            "nome_squadra": self.nome_squadra,
-            "numero_componenti": self.numero_componenti,
-            "classe_id": self.classe_id,
+            "name": self.name,
+            "size": self.size,
+            "school_class_id": self.school_class_id,
         }
