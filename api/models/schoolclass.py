@@ -17,10 +17,12 @@ class SchoolClass(db.Model):
 
     id: int = db.Column(db.Integer, primary_key=True)
     class_name: str = db.Column(db.String(150), unique=True)
-    max_students_per_team: int = db.Column(db.Integer)
+    max_students_per_team: int = db.Column(db.Integer)  # find better way
+    year_id: int = db.Column(db.Integer, db.ForeignKey("year.id"))
 
     teams = db.relationship("Team", lazy="dynamic", backref="school_class")
     students = db.relationship("User", lazy="dynamic", backref="school_class")
+    seasons = db.relationship("Season", lazy="dynamic", backref="school_class")
 
     @classmethod
     def get_by_id(cls, class_id: int) -> "SchoolClass | None":
@@ -68,19 +70,3 @@ class SchoolClass(db.Model):
         """
         not_available = ["admin", "Nessuna_squadra"]
         return cls.query.filter(~cls.class_name.in_(not_available)).all()
-
-    def to_dict(self) -> dict:
-        """
-        Convert the class object to a dictionary representation.
-
-        Returns:
-            dict: Dictionary containing class data with keys:
-                - id (int): Class ID
-                - class_name (str): Class name
-                - max_students_per_team (int): Max students per team
-        """
-        return {
-            "id": self.id,
-            "class_name": self.class_name,
-            "max_students_per_team": self.max_students_per_team,
-        }

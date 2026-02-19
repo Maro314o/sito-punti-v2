@@ -1,5 +1,4 @@
 from flask_login import UserMixin
-from sqlalchemy import func
 import datetime
 from api.database import db
 
@@ -38,7 +37,7 @@ class User(db.Model, UserMixin):
 
     school_class_id: int = db.Column(db.Integer, db.ForeignKey("school_class.id"))
     team_id: int = db.Column(db.Integer, db.ForeignKey("team.id"))
-    events= db.relationship("Event", lazy="dynamic", backref="user")
+    events = db.relationship("Event", lazy="dynamic", backref="user")
 
     def is_admin(self) -> bool:
         """
@@ -135,29 +134,3 @@ class User(db.Model, UserMixin):
             list[User]: List of all active student users.
         """
         return cls.query.filter_by(admin_user=0, active_account=1).all()
-
-    def to_dict(self) -> dict:
-        """
-        Convert the user object to a dictionary representation.
-
-        Returns:
-            dict: Dictionary containing user data with keys:
-                - id (int): User's ID
-                - email (str): User's email
-                - full_name (str): User's full name
-                - team_name (str): Team name
-                - admin_user (int): Admin flag
-                - active_account (int): Active account flag
-                - school_class_id (int): Class ID
-                - team_id (int): Team ID
-        """
-        return {
-            "id": self.id,
-            "email": self.email,
-            "full_name": self.full_name,
-            "team_name": self.team_name,
-            "admin_user": self.admin_user,
-            "active_account": self.active_account,
-            "school_class_id": self.school_class_id,
-            "team_id": self.team_id,
-        }

@@ -50,15 +50,6 @@ class Team(db.Model):
         """
         return cls.query.filter_by(name=team_name).first()
 
-    @classmethod
-    def get_all(cls) -> list["Team"]:
-        """
-        Retrieve all teams.
-
-        Returns:
-            list[Team]: List of all teams.
-        """
-        return cls.query.all()
 
     @classmethod
     def get_by_class(cls, school_class_id: int) -> list["Team"]:
@@ -72,21 +63,3 @@ class Team(db.Model):
             list[Team]: List of teams in the specified class.
         """
         return cls.query.filter_by(school_class_id=school_class_id).all()
-
-    def to_dict(self) -> dict:
-        """
-        Convert the team object to a dictionary representation.
-
-        Returns:
-            dict: Dictionary containing team data with keys:
-                - id (int): Team ID
-                - name (str): Team name
-                - size (int): Number of team members
-                - school_class_id (int): Class ID the team belongs to
-        """
-        return {
-            "id": self.id,
-            "name": self.name,
-            "size": self.size,
-            "school_class_id": self.school_class_id,
-        }

@@ -1,4 +1,9 @@
 from api.models.user import User
-from api.models.class import Class
+from api.models.schoolclass import SchoolClass
 from api.models.team import Team
-
+from api.models.event import Event
+from api.models.season import Season
+from api.models.year import Year
+from api.models.phrase import Phrase
+from api.models.fruit import Fruit
+from api.models.power import Power
