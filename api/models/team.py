@@ -1,7 +1,7 @@
+from sqlalchemy import func
+
 from api.database import db
 from api.models.event import Event
-from api.models.user import User
-from sqlalchemy import func
 
 
 class Team(db.Model):

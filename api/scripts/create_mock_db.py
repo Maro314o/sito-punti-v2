@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
+import datetime
 import os
 import sys
-import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.database import db
-from api.models import User, SchoolClass, Team, Event, Season, Year
+from api.models import Event, SchoolClass, Season, Team, User, Year
 
 
 def create_mock_db(db_path: str = "data/mock_database.db"):

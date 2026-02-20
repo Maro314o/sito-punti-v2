@@ -1,16 +1,17 @@
 import os
-from flask import Flask 
-from flask_cors import CORS
+
 from dotenv import load_dotenv
+from flask import Flask
+from flask_cors import CORS
 
-from api.models import User, SchoolClass, Team 
 from api.auth import auth
+from api.models import SchoolClass, Team, User
 from api.routes import api_bp
-from api.utils import require_env_var
 from api.users.creation import construct_admin_user
-from .database import db
+from api.utils import require_env_var
 
-from .constants import DOTENV_FILE, DATABASE_FILE, DATA_DIRECTORY
+from .constants import DATA_DIRECTORY, DATABASE_FILE, DOTENV_FILE
+from .database import db
 
 load_dotenv(DOTENV_FILE)
 

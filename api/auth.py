@@ -1,10 +1,12 @@
-from flask import Blueprint, request, jsonify
-from werkzeug.security import check_password_hash, generate_password_hash
-import jwt
 import os
 from datetime import datetime, timedelta
+
+import jwt
+from flask import Blueprint, jsonify, request
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from api.database import db
-from api.models import Utente, Classe
+from api.models import Classe, Utente
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
@@ -142,9 +144,7 @@ def seed_admin():
 
     existing_admin = Utente.get_by_email("admin@test.com")
     if existing_admin:
-        return jsonify(
-            {"message": "Admin already exists", "user": existing_admin.to_dict()}
-        )
+        return jsonify({"message": "Admin already exists", "user": existing_admin.to_dict()})
 
     admin_classe = Classe.get_by_nome("admin")
     if not admin_classe:

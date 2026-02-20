@@ -1,6 +1,5 @@
-from pathlib import Path
 from enum import Enum
-
+from pathlib import Path
 
 # use this naming convention: _DIRECTORY for a folder/directory and _FILE for a file
 API_DIRECTORY: Path = Path(__file__).parent
@@ -21,18 +20,18 @@ WEAPONS = {
     Weapon.Pluton: "Raddoppia taglia voto",
     Weapon.Uranos: "Sposta interrogazione a prossima data (+10 per anticipo)",
 }
-RESET_POWERS_BITMASK= 0
+RESET_POWERS_BITMASK = 0
 for i, _ in enumerate(WEAPONS):
-    RESET_POWERS_BITMASK|= 1 << i 
+    RESET_POWERS_BITMASK |= 1 << i
 
 
 class Role(str, Enum):
-    Capitano = 1<<0
-    Navigatore = 1<<1
-    Carpentiere =1<<2
-    Medico =1<<3
-    Cecchino =1<<4
-    Sguattero =1<<5
+    Capitano = 1 << 0
+    Navigatore = 1 << 1
+    Carpentiere = 1 << 2
+    Medico = 1 << 3
+    Cecchino = 1 << 4
+    Sguattero = 1 << 5
 
 
 ROLES = {
@@ -62,6 +61,6 @@ ROLES = {
     },
 }
 
+
 class EventType(str, Enum):
     pass
-

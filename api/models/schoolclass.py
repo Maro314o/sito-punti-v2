@@ -1,3 +1,5 @@
+from sqlalchemy import not_
+
 from api.database import db
 
 
@@ -69,4 +71,4 @@ class SchoolClass(db.Model):
             list[SchoolClass]: List of all student-available classes.
         """
         not_available = ["admin", "Nessuna_squadra"]
-        return cls.query.filter(~cls.class_name.in_(not_available)).all()
+        return cls.query.filter(not_(cls.class_name.in_(not_available))).all()

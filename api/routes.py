@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 
-from api.models import User, SchoolClass, Team, Event
+from api.models import Event, SchoolClass, Team, User
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 

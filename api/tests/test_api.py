@@ -1,12 +1,13 @@
 import os
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from api.main import create_app
 from api.database import db
+from api.main import create_app
 
 
 @pytest.fixture
@@ -24,7 +25,7 @@ def app():
     with app.app_context():
         db.create_all()
 
-        from api.models import User, SchoolClass, Team
+        from api.models import SchoolClass, Team, User
 
         admin_class = SchoolClass(class_name="admin", max_students_per_team=0)
         db.session.add(admin_class)

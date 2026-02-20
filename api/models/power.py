@@ -1,5 +1,5 @@
+from api.constants import RESET_POWERS_BITMASK, Role, Weapon
 from api.database import db
-from api.constants import Weapon, Role, RESET_POWERS_BITMASK
 
 
 class Power(db.Model):

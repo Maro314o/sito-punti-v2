@@ -1,8 +1,8 @@
 from werkzeug.security import generate_password_hash
 
-from api.models.user import User
-from api.models.team import Team
 from api.models.schoolclass import SchoolClass
+from api.models.team import Team
+from api.models.user import User
 
 
 def construct_user(**kwargs) -> User:

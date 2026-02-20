@@ -11,8 +11,8 @@ test:
 audit: lint typecheck
 
 lint:
-	cd api && uv run ruff check .
-	cd api && uv run ruff format --check .
+	cd api && uv run ruff check . --fix
+	cd api && uv run ruff format .
 
 typecheck:
 	cd api && uv run pyright .

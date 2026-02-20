@@ -1,6 +1,7 @@
+import datetime
+
 from api.database import db
 from api.models import Season
-import datetime
 
 
 class Year(db.Model):
