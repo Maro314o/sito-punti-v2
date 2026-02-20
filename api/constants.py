@@ -61,3 +61,7 @@ ROLES = {
         "power_description": "Pulisce il pavimento",
     },
 }
+
+class EventType(str, Enum):
+    pass
+

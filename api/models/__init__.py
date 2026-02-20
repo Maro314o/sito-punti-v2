@@ -7,3 +7,15 @@ from api.models.year import Year
 from api.models.phrase import Phrase
 from api.models.fruit import Fruit
 from api.models.power import Power
+
+__all__ = [
+    "User",
+    "SchoolClass",
+    "Team",
+    "Event",
+    "Season",
+    "Year",
+    "Phrase",
+    "Fruit",
+    "Power",
+]

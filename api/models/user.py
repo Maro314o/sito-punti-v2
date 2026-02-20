@@ -1,6 +1,10 @@
 from flask_login import UserMixin
 import datetime
+
+from sqlalchemy.orm import Query
 from api.database import db
+from api.models.season import Season
+from sqlalchemy import func
 
 
 class User(db.Model, UserMixin):
@@ -27,10 +31,9 @@ class User(db.Model, UserMixin):
     id: int = db.Column(db.Integer, primary_key=True)
     email: str = db.Column(db.String(150), unique=True)
     full_name: str = db.Column(db.String(150), unique=True)
-    team_name: str = db.Column(db.String(150), nullable=False)
     password: str = db.Column(db.String(150), nullable=False)
-    admin_user: int = db.Column(db.Integer, default=0)
-    active_account: int = db.Column(db.Integer, default=0)
+    admin_user: bool = db.Column(db.Boolean, default=0)
+    active_account: bool = db.Column(db.Boolean, default=0)
     last_password_change: datetime.datetime = db.Column(
         db.DateTime, default=datetime.datetime.now
     )
@@ -134,3 +137,20 @@ class User(db.Model, UserMixin):
             list[User]: List of all active student users.
         """
         return cls.query.filter_by(admin_user=0, active_account=1).all()
+
+    def get_points_of_season(self, season: Season | int) -> float:
+        season_id: int = -1
+        if type(season) is int:
+            season_id = Season.get_by_number_and_class_id(
+                season, self.school_class_id
+            ).id
+        elif type(season) is Season:
+            season_id = season.id
+
+        season_events: Query = self.events.query.filter_by(season_id=season_id)
+        column_sum_query: Query = season_events.with_entities(
+            func.sum(self.events.points)
+        )
+        total_points_of_season = column_sum_query.scalar()
+
+        return total_points_of_season

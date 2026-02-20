@@ -15,9 +15,6 @@ class Power(db.Model):
         powers_bitmask (int): Bitmask representing available powers
         weapons_bitmask (int): Bitmask representing available weapons
 
-    Relationships:
-        user (relationship): Many-to-one relationship with User model
-
     Note:
         Role bitmask values:
             - Capitano = 1<<0
@@ -101,16 +98,3 @@ class Power(db.Model):
             NoResultFound: If no power record with the given ID exists.
         """
         return cls.query.filter_by(id=power_id).one()
-
-    @classmethod
-    def get_by_user(cls, user_id: int) -> "Power | None":
-        """
-        Retrieve a power record for a specific user.
-
-        Args:
-            user_id (int): The ID of the user.
-
-        Returns:
-            Power | None: The power object if found, None otherwise.
-        """
-        return cls.query.filter_by(user_id=user_id).first()

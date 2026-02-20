@@ -1,4 +1,5 @@
 from api.database import db
+from api.models import Season
 import datetime
 
 
@@ -12,9 +13,6 @@ class Year(db.Model):
         name (str): Name of the school year
         start (datetime): Start date and time of the year
         end (datetime): End date and time of the year
-
-    Relationships:
-        seasons (relationship): One-to-many relationship with Season model
     """
 
     id: int = db.Column(db.Integer, primary_key=True)
@@ -41,25 +39,8 @@ class Year(db.Model):
         return cls.query.filter_by(id=year_id).one()
 
     @classmethod
-    def get_by_grade(cls, school_grade: int) -> "Year | None":
-        """
-        Retrieve a year by its school grade level.
+    def get_by_grade(cls, grade: int) -> "Year":
+        return cls.query.filter_by(school_grade=grade).one()
 
-        Args:
-            school_grade (int): The school grade level.
-
-        Returns:
-            Year | None: The year object if found, None otherwise.
-        """
-        return cls.query.filter_by(school_grade=school_grade).first()
-
-    @classmethod
-    def get_current(cls) -> "Year | None":
-        """
-        Retrieve the current active year based on current date.
-
-        Returns:
-            Year | None: The current year if found, None otherwise.
-        """
-        now = datetime.datetime.now()
-        return cls.query.filter(cls.start <= now, cls.end >= now).first()
+    def get_season_of_class(self, class_id: int) -> list[Season]:
+        return self.seasons.filter_by(class_id=class_id).all()

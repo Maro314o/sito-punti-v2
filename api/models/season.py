@@ -14,9 +14,6 @@ class Season(db.Model):
         season_number (int): Sequential number of the season within the year
         class_id (int): Foreign key to the school_class table
         year_id (int): Foreign key to the year table
-
-    Relationships:
-        year (relationship): Many-to-one relationship with Year model
     """
 
     id: int = db.Column(db.Integer, primary_key=True)
@@ -44,16 +41,5 @@ class Season(db.Model):
         return cls.query.filter_by(id=season_id).one()
 
     @classmethod
-    def get_current(cls, class_id: int) -> "Season | None":
-        """
-        Retrieve the current active season of a class based on current date.
-
-        Returns:
-            Season | None: The current season if found, None otherwise.
-        """
-        now = datetime.datetime.now()
-        return (
-            cls.query.filter(class_id=class_id)
-            .filter(cls.start <= now, cls.end >= now)
-            .one()
-        )
+    def get_by_number_and_class_id(cls, number: int, class_id: int) -> "Season":
+        return cls.query.filter_by(number=number, class_id=class_id).one()

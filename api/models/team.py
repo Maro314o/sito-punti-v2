@@ -1,4 +1,7 @@
 from api.database import db
+from api.models.event import Event
+from api.models.user import User
+from sqlalchemy import func
 
 
 class Team(db.Model):
@@ -50,7 +53,6 @@ class Team(db.Model):
         """
         return cls.query.filter_by(name=team_name).first()
 
-
     @classmethod
     def get_by_class(cls, school_class_id: int) -> list["Team"]:
         """
@@ -63,3 +65,21 @@ class Team(db.Model):
             list[Team]: List of teams in the specified class.
         """
         return cls.query.filter_by(school_class_id=school_class_id).all()
+
+    def get_points_of_season(self, season_id: int) -> float:
+        """
+        Get total points for the team in a specific season.
+
+        Args:
+            season_id: The ID of the season.
+
+        Returns:
+            float: Total points of all team members in the season.
+        """
+        result = (
+            db.session.query(func.sum(Event.points))
+            .join(self.members.property)
+            .filter(Event.season_id == season_id)
+            .scalar()
+        )
+        return result if result is not None else 0.0
