@@ -83,3 +83,11 @@ class Team(db.Model):
             .scalar()
         )
         return result if result is not None else 0.0
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "size": self.size,
+            "school_class_id": self.school_class_id,
+        }

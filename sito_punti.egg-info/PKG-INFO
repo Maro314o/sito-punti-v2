@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: sito-punti
+Version: 0.0.20
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: Flask==3.1.2
+Requires-Dist: Flask-Login==0.6.3
+Requires-Dist: Flask-SQLAlchemy<4.0.0,>=3.1.0
+Requires-Dist: Flask-CORS>=5.0.0
+Requires-Dist: SQLAlchemy==2.0.43
+Requires-Dist: pandas==2.3.2
+Requires-Dist: openpyxl==3.1.5
+Requires-Dist: Werkzeug<4.0.0,>=3.1.0
+Requires-Dist: python-dotenv>=1.2.1
+Requires-Dist: pydantic[email]>=2.0.0
+Requires-Dist: pytest>=8.0.0
+Dynamic: license-file

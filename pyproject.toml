@@ -12,8 +12,13 @@ dependencies = [
   "openpyxl==3.1.5",
   "Werkzeug>=3.1.0,<4.0.0",
   "python-dotenv>=1.2.1",
+  "pydantic[email]>=2.0.0",
   "pytest>=8.0.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["api*"]
 
 [tool.pyright]
 venvPath = "."

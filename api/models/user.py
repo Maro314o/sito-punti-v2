@@ -5,7 +5,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Query
 
 from api.database import db
-from api.models.season import Season
+from api.models.season import SchoolClass, Season
+from api.models.team import Team
 
 
 class User(db.Model, UserMixin):
@@ -60,7 +61,7 @@ class User(db.Model, UserMixin):
         return self.active_account == 1
 
     @classmethod
-    def get_by_id(cls, user_id: int) -> "User":
+    def get_by_id(cls, user_id: int) -> "User | None":
         """
         Retrieve a user by their ID.
 
@@ -68,12 +69,9 @@ class User(db.Model, UserMixin):
             user_id (int): The unique identifier of the user.
 
         Returns:
-            User: The user object with the specified ID.
-
-        Raises:
-            NoResultFound: If no user with the given ID exists.
+            User | None: The user object if found, None otherwise.
         """
-        return cls.query.filter_by(id=user_id).one()
+        return cls.query.filter_by(id=user_id).first()
 
     @classmethod
     def get_by_full_name(cls, full_name: str) -> "User":
@@ -106,6 +104,16 @@ class User(db.Model, UserMixin):
             NoResultFound: If no user with the given email exists.
         """
         return cls.query.filter_by(email=email).one()
+
+    @classmethod
+    def exists_by_email(cls, email: str) -> "User | None":
+        """Check if a user with the given email exists."""
+        return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def exists_by_full_name(cls, full_name: str) -> "User | None":
+        """Check if a user with the given full name exists."""
+        return cls.query.filter_by(full_name=full_name).first()
 
     @classmethod
     def get_all_students(cls) -> list["User"]:
@@ -149,3 +157,23 @@ class User(db.Model, UserMixin):
         total_points_of_season = column_sum_query.scalar()
 
         return total_points_of_season
+
+    def core_info(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": self.full_name,
+            "school_class_name": SchoolClass.get_by_id(self.school_class_id).name,
+            "team_id": Team.get_by_id(self.team_id).name,
+        }
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "full_name": self.full_name,
+            "admin_user": self.admin_user,
+            "active_account": self.active_account,
+            "school_class_id": self.school_class_id,
+            "team_id": self.team_id,
+        }

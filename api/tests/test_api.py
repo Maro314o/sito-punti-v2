@@ -1,28 +1,30 @@
-import os
 import sys
 from pathlib import Path
 
 import pytest
+from flask import Flask
+from flask_cors import CORS
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.database import db
-from api.main import create_app
+from api.endpoints.auth import auth
+from api.endpoints.routes import api_bp
 
 
 @pytest.fixture
 def app():
-    test_db_path = "data/test_database.db"
-    os.makedirs("data", exist_ok=True)
+    test_app = Flask(__name__)
+    test_app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    test_app.config["TESTING"] = True
+    test_app.config["SECRET_KEY"] = "test-secret"
 
-    if os.path.exists(test_db_path):
-        os.remove(test_db_path)
+    db.init_app(test_app)
+    CORS(test_app)
+    test_app.register_blueprint(auth)
+    test_app.register_blueprint(api_bp)
 
-    app = create_app()
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{test_db_path}"
-    app.config["TESTING"] = True
-
-    with app.app_context():
+    with test_app.app_context():
         db.create_all()
 
         from api.models import SchoolClass, Team, User
@@ -38,7 +40,6 @@ def app():
         admin = User(
             email="admin@test.com",
             full_name="Admin User",
-            team_name="admin",
             password="hashed_password",
             admin_user=1,
             active_account=1,
@@ -48,12 +49,10 @@ def app():
         db.session.add(admin)
         db.session.commit()
 
-        yield app
+        yield test_app
 
         db.session.remove()
         db.drop_all()
-        if os.path.exists(test_db_path):
-            os.remove(test_db_path)
 
 
 @pytest.fixture

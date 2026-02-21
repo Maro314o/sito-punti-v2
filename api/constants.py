@@ -1,5 +1,7 @@
-from enum import Enum
+from enum import Enum, IntEnum
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 from api.utils import require_env_var
 
@@ -9,13 +11,14 @@ PROJECT_DIRECTORY: Path = API_DIRECTORY.parent
 DOTENV_FILE: Path = PROJECT_DIRECTORY / ".env"
 DATA_DIRECTORY: Path = PROJECT_DIRECTORY / "data"
 DATABASE_FILE: Path = DATA_DIRECTORY / "database.db"
+load_dotenv(DOTENV_FILE)
 
 
 SECRET_KEY = require_env_var("SECRET_KEY")
 TOKEN_EXPIRY_DAYS = 31
 
 
-class Weapon(int, Enum):
+class Weapon(IntEnum):
     Poseidon = 1 << 0
     Pluton = 1 << 1
     Uranos = 1 << 2
@@ -31,7 +34,7 @@ for i, _ in enumerate(WEAPONS):
     RESET_POWERS_BITMASK |= 1 << i
 
 
-class Role(str, Enum):
+class Role(IntEnum):
     Capitano = 1 << 0
     Navigatore = 1 << 1
     Carpentiere = 1 << 2
@@ -68,5 +71,5 @@ ROLES = {
 }
 
 
-class EventType(str, Enum):
+class EventType(Enum):
     pass

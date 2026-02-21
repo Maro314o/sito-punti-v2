@@ -1,19 +1,15 @@
 import os
 
-from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 
-from api.auth import auth
+from api.constants import DATA_DIRECTORY, DATABASE_FILE, SECRET_KEY
+from api.database import db
+from api.endpoints.auth import auth
+from api.endpoints.routes import api_bp
 from api.models import SchoolClass, Team, User
-from api.routes import api_bp
 from api.users.creation import construct_admin_user
 from api.utils import require_env_var
-
-from .constants import DATA_DIRECTORY, DATABASE_FILE, DOTENV_FILE, SECRET_KEY
-from .database import db
-
-load_dotenv(DOTENV_FILE)
 
 
 def create_app():
