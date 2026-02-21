@@ -10,7 +10,7 @@ from api.routes import api_bp
 from api.users.creation import construct_admin_user
 from api.utils import require_env_var
 
-from .constants import DATA_DIRECTORY, DATABASE_FILE, DOTENV_FILE
+from .constants import DATA_DIRECTORY, DATABASE_FILE, DOTENV_FILE, SECRET_KEY
 from .database import db
 
 load_dotenv(DOTENV_FILE)
@@ -18,7 +18,7 @@ load_dotenv(DOTENV_FILE)
 
 def create_app():
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = require_env_var("SECRET_KEY")
+    app.config["SECRET_KEY"] = SECRET_KEY
 
     os.makedirs(DATA_DIRECTORY, exist_ok=True)
     database_url = os.getenv("DATABASE_URL", f"sqlite:///{DATABASE_FILE}")
