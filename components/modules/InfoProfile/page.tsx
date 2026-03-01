@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import CldImage from "@/components/ui/CldImage";
 import Bounty from "../Bounty/page";
 import jollyroger from "@/public/class_images/4CI-JOLLY ROGER/THE DIDDLERS.jpg";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ import {
 export default function InfoProfile() {
   const fruttiPos = 3;
   const fruttiNeg = 1;
+  const jollyroger = "THE_DIDDLERS_h79odr";
   const anno = "2026";
   const rotta = "rotta 1";
   const nomeRotta = "Nautilus";
@@ -34,7 +35,7 @@ export default function InfoProfile() {
           <Friuts fruttiPositivi={fruttiPos} fruttiNegativi={fruttiNeg} />
           <Bounty />
           <div className="container max-w-xs">
-            <Image src={jollyroger} alt={""} />
+            <CldImage src={jollyroger} alt={""} width={500} height={500} />
           </div>
         </div>
       </div>
@@ -141,9 +142,21 @@ const GeneralAbilitiesWrapper = ({}) => {
 
   return (
     <div className="flex flex-row gap-5 mx-auto">
-      <GeneralAbility name="poseidon" isUsed={armiUsate.includes("poseidon")} />
-      <GeneralAbility name="pluto" isUsed={armiUsate.includes("pluto")} />
-      <GeneralAbility name="uranus" isUsed={armiUsate.includes("uranus")} />
+      <GeneralAbility
+        name="poseidon"
+        isUsed={armiUsate.includes("poseidon")}
+        ability_img={"THE_DIDDLERS_h79odr"}
+      />
+      <GeneralAbility
+        name="pluto"
+        isUsed={armiUsate.includes("pluto")}
+        ability_img={"THE_DIDDLERS_h79odr"}
+      />
+      <GeneralAbility
+        name="uranus"
+        isUsed={armiUsate.includes("uranus")}
+        ability_img={"THE_DIDDLERS_h79odr"}
+      />
     </div>
   );
 };
@@ -151,9 +164,11 @@ const GeneralAbilitiesWrapper = ({}) => {
 const GeneralAbility = ({
   name,
   isUsed,
+  ability_img,
 }: {
   name: ArmaKey;
   isUsed: boolean;
+  ability_img: string;
 }) => {
   const arma = armiData[name];
 
@@ -162,7 +177,13 @@ const GeneralAbility = ({
       <DialogTrigger asChild>
         <div className="min-w-25 text-center cursor-pointer hover:opacity-80 transition-opacity">
           <div className="w-30 mx-auto border-2 overflow-hidden border-gray-600 shadow-xs bg-background rounded-full">
-            <Image src={jollyroger} alt={name} className="object-cover w-full h-full" />
+            <CldImage
+              src={ability_img}
+              alt={name}
+              className="object-cover w-full h-full"
+              width={30}
+              height={30}
+            />
           </div>
           <h4 className="capitalize">{name}</h4>
         </div>
@@ -174,15 +195,17 @@ const GeneralAbility = ({
         <div
           className={cn(
             "grid gap-4 p-4 rounded-lg border",
-            isUsed ? "bg-gray-200/50" : "bg-background"
+            isUsed ? "bg-gray-200/50" : "bg-background",
           )}
         >
           <div className="flex flex-col md:flex-row gap-4 items-start">
             <div className="w-24 h-24 flex-shrink-0 mx-auto md:mx-0">
-              <Image
-                src={jollyroger}
+              <CldImage
+                src={ability_img}
                 alt={arma.nome}
                 className="w-full h-full object-cover rounded-full border"
+                width={30}
+                height={30}
               />
             </div>
             <div className="flex-1">
